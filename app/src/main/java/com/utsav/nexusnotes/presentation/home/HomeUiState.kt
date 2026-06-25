@@ -1,9 +1,11 @@
 package com.utsav.nexusnotes.presentation.home
 
+import com.utsav.nexusnotes.domain.model.Note
+
 data class HomeUiState(
 
-    val isLoading: Boolean = false,
+    val notes: List<Note> = emptyList(),
 
-    val totalNotes: Int = 0
+    val isLoading: Boolean = true
 
 )
