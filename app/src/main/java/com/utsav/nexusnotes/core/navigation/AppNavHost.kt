@@ -19,37 +19,21 @@ fun AppNavHost() {
         startDestination = Routes.HOME
     ) {
 
-        composable(Routes.HOME) {
+        composable(
+            route = Routes.HOME
+        ) {
 
             HomeScreen(
 
                 onAddClick = {
 
-                    navController.navigate(Routes.EDITOR)
+                    navController.openEditor()
 
                 },
 
                 onNoteClick = { noteId ->
 
-                    navController.navigate(
-                        "editor/$noteId"
-                    )
-
-                }
-
-            )
-
-        }
-
-        composable(
-            route = Routes.EDITOR
-        ) {
-
-            EditorScreen(
-
-                onBack = {
-
-                    navController.popBackStack()
+                    navController.openEditor(noteId)
 
                 }
 
@@ -59,25 +43,35 @@ fun AppNavHost() {
 
         composable(
 
-            route = Routes.EDITOR_WITH_ID,
+            route = Routes.EDITOR_ROUTE,
 
             arguments = listOf(
 
-                navArgument(
-                    NavArguments.NOTE_ID
-                ) {
+                navArgument(NavArguments.NOTE_ID) {
+
                     type = NavType.LongType
+
+                    defaultValue = 0L
+
                 }
 
             )
 
         ) {
 
+            val noteId =
+
+                it.arguments?.getLong(
+                    NavArguments.NOTE_ID
+                ) ?: 0L
+
             EditorScreen(
+
+                noteId = noteId,
 
                 onBack = {
 
-                    navController.popBackStack()
+                    navController.goBack()
 
                 }
 

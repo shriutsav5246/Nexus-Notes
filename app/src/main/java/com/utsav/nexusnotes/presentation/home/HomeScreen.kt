@@ -1,36 +1,36 @@
 package com.utsav.nexusnotes.presentation.home
-
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
+import com.utsav.nexusnotes.presentation.home.components.DeleteNotesDialog
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.utsav.nexusnotes.presentation.home.components.EmptyHome
+import com.utsav.nexusnotes.presentation.home.components.HomeTopBar
+import com.utsav.nexusnotes.presentation.home.components.NotesList
+import com.utsav.nexusnotes.presentation.home.components.SearchTopBar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.SnackbarResult
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,159 +46,33 @@ fun HomeScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    Scaffold(
+    val listState = rememberLazyListState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(Unit) {
 
-        topBar = {
+        viewModel.events.collect { event ->
 
-            CenterAlignedTopAppBar(
+            when (event) {
 
-                title = {
-                    Text("Nexus Notes")
-                },
+                HomeScreenEvent.ShowUndoSnackbar -> {
 
-                actions = {
+                    val result = snackbarHostState.showSnackbar(
 
-                    IconButton(onClick = { }) {
+                        message = "Notes moved to Trash",
 
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "Search"
-                        )
+                        actionLabel = "UNDO"
 
-                    }
-
-                    IconButton(onClick = { }) {
-
-                        Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = "Settings"
-                        )
-
-                    }
-
-                },
-
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors()
-
-            )
-
-        },
-
-        floatingActionButton = {
-
-            FloatingActionButton(
-
-                onClick = onAddClick
-
-            ) {
-
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add Note"
-                )
-
-            }
-
-        }
-
-    ) { padding ->
-
-        if (state.notes.isEmpty()) {
-
-            EmptyHome(
-                modifier = Modifier.padding(padding)
-            )
-
-        } else {
-
-            NotesGrid(
-                state = state,
-                padding = padding,
-                onNoteClick = onNoteClick
-            )
-
-        }
-
-    }
-
-}
-
-@Composable
-private fun EmptyHome(
-    modifier: Modifier = Modifier
-) {
-
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-
-        Text(
-            text = "No Notes Yet\n\nTap + to create your first note.",
-            style = MaterialTheme.typography.bodyLarge
-        )
-
-    }
-
-}
-
-@Composable
-private fun NotesGrid(
-    state: HomeUiState,
-    padding: PaddingValues,
-    onNoteClick: (Long) -> Unit
-) {
-
-    LazyVerticalGrid(
-
-        columns = GridCells.Fixed(2),
-
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(padding),
-
-        contentPadding = PaddingValues(16.dp),
-
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-
-    ) {
-
-        items(state.notes) { note ->
-
-            Card(
-
-                onClick = {
-
-                    onNoteClick(note.id)
-
-                },
-
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 2.dp
-                )
-
-            ) {
-
-                androidx.compose.foundation.layout.Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-
-                    Text(
-                        text = note.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
                     )
 
-                    Text(
-                        modifier = Modifier.padding(top = 8.dp),
-                        text = note.content,
-                        style = MaterialTheme.typography.bodyMedium,
-                        maxLines = 6,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+
+                        viewModel.undoDelete()
+
+                    } else {
+
+                        viewModel.clearRecentlyDeleted()
+
+                    }
 
                 }
 
@@ -207,5 +81,200 @@ private fun NotesGrid(
         }
 
     }
+
+    BackHandler(
+        enabled = state.isSelectionMode
+    ) {
+        viewModel.clearSelection()
+    }
+
+    Scaffold(
+
+        snackbarHost = {
+
+            SnackbarHost(
+                hostState = snackbarHostState
+            )
+
+        },
+
+        topBar = {
+
+            Crossfade(
+                targetState = state.isSearching,
+                label = "TopBar"
+            ) { searching ->
+
+                if (searching) {
+
+                    SearchTopBar(
+
+                        query = state.searchText,
+
+                        onQueryChange = viewModel::onSearchTextChange,
+
+                        onCloseClick = viewModel::onSearchClose
+
+                    )
+
+                } else {
+
+                    HomeTopBar(
+
+                        isSelectionMode = state.isSelectionMode,
+
+                        selectedCount = state.selectedNotes.size,
+
+                        allSelected =
+
+                            state.notes.isNotEmpty() &&
+                                    state.selectedNotes.size == state.notes.size,
+
+                        onBackClick = {
+
+                            viewModel.clearSelection()
+
+                        },
+
+                        onSearchClick = {
+
+                            if (!state.isSelectionMode) {
+
+                                viewModel.onSearchClick()
+
+                            }
+
+                        },
+
+                        onSettingsClick = {
+
+                            // TODO
+
+                        },
+
+                        onDeleteClick = {
+
+                            viewModel.showDeleteDialog()
+
+                        },
+
+                        onSelectAllClick = {
+
+                            viewModel.toggleSelectAll()
+
+                        }
+
+                    )
+
+                }
+
+            }
+
+        },
+
+        floatingActionButton = {
+
+            AnimatedVisibility(
+
+                visible = !listState.isScrollInProgress,
+
+                enter = fadeIn() + slideInVertically(),
+
+                exit = fadeOut() + slideOutVertically()
+
+            ) {
+
+                FloatingActionButton(
+
+                    onClick = onAddClick
+
+                ) {
+
+                    Icon(
+
+                        imageVector = Icons.Default.Add,
+
+                        contentDescription = "Add Note"
+
+                    )
+
+                }
+
+            }
+
+        }
+
+    )
+    { padding ->
+
+        if (state.notes.isEmpty()) {
+
+            EmptyHome(
+
+                modifier = Modifier.padding(padding)
+
+            )
+
+        } else {
+
+            NotesList(
+
+                state = state,
+
+                padding = padding,
+
+                listState = listState,
+
+                onNoteClick = { noteId ->
+
+                    if (state.isSelectionMode) {
+
+                        viewModel.onSelectionClick(noteId)
+
+                    } else {
+
+                        onNoteClick(noteId)
+
+                    }
+
+                },
+
+                onNoteLongClick = { noteId ->
+
+                    viewModel.onNoteLongClick(noteId)
+
+                },
+
+                onSelectionClick = { noteId ->
+
+                    viewModel.onSelectionClick(noteId)
+
+                }
+
+            )
+
+        }
+
+    }
+
+    DeleteNotesDialog(
+
+        visible = state.showDeleteDialog,
+
+        selectedCount = state.selectedNotes.size,
+
+        onDismiss = {
+
+            viewModel.hideDeleteDialog()
+
+        },
+
+        onConfirm = {
+
+            viewModel.deleteSelectedNotes()
+
+        }
+
+    )
 
 }

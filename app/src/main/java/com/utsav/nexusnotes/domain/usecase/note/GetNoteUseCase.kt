@@ -8,8 +8,12 @@ class GetNoteUseCase @Inject constructor(
     private val repository: NoteRepository
 ) {
 
-    suspend operator fun invoke(noteId: Long): Note? {
-        return repository.getNoteById(noteId)
+    suspend operator fun invoke(
+        id: Long
+    ): Note? {
+
+        return repository.getNoteById(id)
+
     }
 
 }

@@ -19,8 +19,10 @@ interface NoteRepository {
         note: Note
     )
 
-    suspend fun deleteNote(
-        note: Note
-    )
+    suspend fun moveToTrash(noteId: Long)
+
+    suspend fun restoreNote(noteId: Long)
+
+    suspend fun permanentlyDelete(noteId: Long)
 
 }

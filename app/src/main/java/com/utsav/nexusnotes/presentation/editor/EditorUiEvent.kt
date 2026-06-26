@@ -10,4 +10,6 @@ sealed interface EditorUiEvent {
         val value: String
     ) : EditorUiEvent
 
+    data object BackPressed : EditorUiEvent
+
 }

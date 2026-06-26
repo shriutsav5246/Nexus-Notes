@@ -37,7 +37,24 @@ interface NoteDao {
     @Update
     suspend fun updateNote(note: NoteEntity)
 
-    @Delete
-    suspend fun deleteNote(note: NoteEntity)
+    @Query("""
+    UPDATE notes
+    SET isDeleted = 1
+    WHERE id = :noteId
+""")
+    suspend fun moveToTrash(noteId: Long)
+
+    @Query("""
+    UPDATE notes
+    SET isDeleted = 0
+    WHERE id = :noteId
+""")
+    suspend fun restoreNote(noteId: Long)
+
+    @Query("""
+    DELETE FROM notes
+    WHERE id = :noteId
+""")
+    suspend fun permanentlyDelete(noteId: Long)
 
 }

@@ -3,11 +3,11 @@ package com.utsav.nexusnotes.core.navigation
 import androidx.navigation.NavHostController
 
 fun NavHostController.openEditor() {
-    navigate(Routes.EDITOR)
+    openEditor(0L)
 }
 
 fun NavHostController.openEditor(noteId: Long) {
-    navigate("editor/$noteId")
+    navigate("${Routes.EDITOR}/$noteId")
 }
 
 fun NavHostController.goBack() {

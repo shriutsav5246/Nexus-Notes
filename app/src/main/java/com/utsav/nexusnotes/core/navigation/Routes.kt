@@ -6,6 +6,7 @@ object Routes {
 
     const val EDITOR = "editor"
 
-    const val EDITOR_WITH_ID = "editor/{noteId}"
+    const val EDITOR_ROUTE =
+        "editor/{noteId}"
 
 }
