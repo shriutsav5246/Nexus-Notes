@@ -28,19 +28,13 @@ import com.utsav.nexusnotes.domain.model.Note
 
 @Composable
 fun NoteListItem(
-
     note: Note,
-
     selected: Boolean,
-
     onClick: () -> Unit,
-
     onLongClick: () -> Unit
-
 ) {
 
     Box(
-
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -48,59 +42,43 @@ fun NoteListItem(
                 onClick = onClick,
                 onLongClick = onLongClick
             )
-
     ) {
 
         Card(
-
             modifier = Modifier.fillMaxWidth(),
-
             shape = MaterialTheme.shapes.large,
-
-            border =
-                if (selected)
-                    BorderStroke(
-                        2.dp,
-                        MaterialTheme.colorScheme.primary
-                    )
-                else
-                    null,
-
+            border = if (selected) {
+                BorderStroke(
+                    2.dp,
+                    MaterialTheme.colorScheme.primary
+                )
+            } else {
+                null
+            },
             elevation = CardDefaults.cardElevation(
-                defaultElevation =
-                    if (selected) 8.dp else 4.dp
+                defaultElevation = if (selected) 8.dp else 4.dp
             ),
-
             colors = CardDefaults.cardColors(
-                containerColor =
-                    if (selected)
-                        MaterialTheme.colorScheme.primaryContainer
-                    else
-                        MaterialTheme.colorScheme.surfaceContainerLow
+                containerColor = if (selected) {
+                    MaterialTheme.colorScheme.primaryContainer
+                } else {
+                    MaterialTheme.colorScheme.surfaceContainerLow
+                }
             )
-
         ) {
 
             Column(
-
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(20.dp)
-
             ) {
 
                 Text(
-
                     text = note.title,
-
                     style = MaterialTheme.typography.titleLarge,
-
                     fontWeight = FontWeight.SemiBold,
-
                     maxLines = 1,
-
                     overflow = TextOverflow.Ellipsis
-
                 )
 
                 Spacer(
@@ -108,49 +86,30 @@ fun NoteListItem(
                 )
 
                 Text(
-
                     text = "Last edited ${note.updatedAt.toRelativeTime()}",
-
                     style = MaterialTheme.typography.bodySmall,
-
                     color = MaterialTheme.colorScheme.outline
-
                 )
-
             }
-
         }
 
         if (selected) {
 
             Surface(
-
                 modifier = Modifier
-                    .padding(12.dp)
-                    .align(Alignment.TopEnd),
-
+                    .align(Alignment.TopEnd)
+                    .padding(12.dp),
                 shape = CircleShape,
-
                 color = MaterialTheme.colorScheme.primary
-
             ) {
 
                 Icon(
-
                     imageVector = Icons.Default.Check,
-
                     contentDescription = null,
-
                     tint = MaterialTheme.colorScheme.onPrimary,
-
                     modifier = Modifier.padding(4.dp)
-
                 )
-
             }
-
         }
-
     }
-
 }

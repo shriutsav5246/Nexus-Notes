@@ -38,7 +38,17 @@ class NoteRepositoryImpl @Inject constructor(
     }
 
     override suspend fun moveToTrash(noteId: Long) {
+        android.util.Log.d(
+            "DELETE_TEST",
+            "Repository moveToTrash() -> $noteId"
+        )
+
         noteDao.moveToTrash(noteId)
+
+        android.util.Log.d(
+            "DELETE_TEST",
+            "Repository Finished"
+        )
     }
 
     override suspend fun restoreNote(noteId: Long) {
@@ -48,4 +58,9 @@ class NoteRepositoryImpl @Inject constructor(
     override suspend fun permanentlyDelete(noteId: Long) {
         noteDao.permanentlyDelete(noteId)
     }
+
+    override fun getDeletedNotes(): Flow<List<Note>> =
+        noteDao.getDeletedNotes().map { notes ->
+            notes.map { it.toDomain() }
+        }
 }

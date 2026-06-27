@@ -9,4 +9,8 @@ object Routes {
     const val EDITOR_ROUTE =
         "editor/{noteId}"
 
+    const val TRASH = "trash"
+
+    const val SETTINGS = "settings"
+
 }

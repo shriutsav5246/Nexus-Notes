@@ -1,4 +1,4 @@
-package com.utsav.nexusnotes.presentation.home.components
+package com.utsav.nexusnotes.presentation.trash.components
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -6,11 +6,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 
 @Composable
-fun DeleteNotesDialog(
+fun RestoreNoteDialog(
 
     visible: Boolean,
-
-    selectedCount: Int,
 
     onDismiss: () -> Unit,
 
@@ -25,29 +23,19 @@ fun DeleteNotesDialog(
         onDismissRequest = onDismiss,
 
         title = {
-
-            Text("Delete Notes")
-
+            Text("Restore Note")
         },
 
         text = {
-
-            Text(
-                "Move $selectedCount notes to trash? Restore later if needed."
-            )
-
+            Text("Do you want to restore this note?")
         },
 
         confirmButton = {
 
             TextButton(
-
                 onClick = onConfirm
-
             ) {
-
-                Text("Delete")
-
+                Text("Restore")
             }
 
         },
@@ -55,13 +43,9 @@ fun DeleteNotesDialog(
         dismissButton = {
 
             TextButton(
-
                 onClick = onDismiss
-
             ) {
-
                 Text("Cancel")
-
             }
 
         }

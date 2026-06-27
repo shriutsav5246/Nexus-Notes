@@ -19,11 +19,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-
+import com.utsav.nexusnotes.domain.usecase.note.GetTrashNotesUseCase
+import com.utsav.nexusnotes.domain.usecase.note.RestoreNoteUseCase
+import com.utsav.nexusnotes.domain.usecase.note.PermanentDeleteUseCase
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
     @Provides
     @Singleton
     fun provideDatabase(
@@ -37,7 +38,6 @@ object AppModule {
         ).build()
 
     }
-
     @Provides
     @Singleton
     fun provideNoteDao(
@@ -47,38 +47,28 @@ object AppModule {
         return database.noteDao()
 
     }
-
     @Provides
     @Singleton
     fun provideRepository(
         noteDao: NoteDao
     ): NoteRepository {
-
         return NoteRepositoryImpl(noteDao)
-
     }
-
     @Provides
     @Singleton
     fun provideNoteUseCases(
         repository: NoteRepository
     ): NoteUseCases {
-
         return NoteUseCases(
-
             getNotes = GetNotesUseCase(repository),
-
+            getTrashNotes = GetTrashNotesUseCase(repository),
             getNote = GetNoteUseCase(repository),
-
             insertNote = InsertNoteUseCase(repository),
-
             updateNote = UpdateNoteUseCase(repository),
-
             deleteNote = DeleteNoteUseCase(repository),
-
+            restoreNote = RestoreNoteUseCase(repository),
+            permanentDelete = PermanentDeleteUseCase(repository),
             saveNote = SaveNoteUseCase(repository)
-
         )
-
     }
 }

@@ -13,3 +13,9 @@ fun NavHostController.openEditor(noteId: Long) {
 fun NavHostController.goBack() {
     popBackStack()
 }
+
+fun NavHostController.openTrash() {
+
+    navigate(Routes.TRASH)
+
+}

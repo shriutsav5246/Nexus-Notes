@@ -29,252 +29,184 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.material3.SnackbarResult
-import kotlinx.coroutines.flow.collectLatest
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalNavigationDrawer
+import com.utsav.nexusnotes.presentation.home.components.HomeDrawer
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-
     onAddClick: () -> Unit,
-
     onNoteClick: (Long) -> Unit,
-
+    onTrashClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onAboutClick: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
-
 ) {
-
     val state by viewModel.state.collectAsStateWithLifecycle()
-
     val listState = rememberLazyListState()
     val snackbarHostState = remember { SnackbarHostState() }
+    val drawerState = rememberDrawerState(
+        initialValue = DrawerValue.Closed
+    )
+    val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
-
         viewModel.events.collect { event ->
-
             when (event) {
-
                 HomeScreenEvent.ShowUndoSnackbar -> {
-
                     val result = snackbarHostState.showSnackbar(
-
                         message = "Notes moved to Trash",
-
                         actionLabel = "UNDO"
-
                     )
-
                     if (result == SnackbarResult.ActionPerformed) {
-
                         viewModel.undoDelete()
-
                     } else {
-
                         viewModel.clearRecentlyDeleted()
-
                     }
-
                 }
-
             }
-
         }
-
     }
-
     BackHandler(
         enabled = state.isSelectionMode
     ) {
         viewModel.clearSelection()
     }
-
-    Scaffold(
-
-        snackbarHost = {
-
-            SnackbarHost(
-                hostState = snackbarHostState
-            )
-
-        },
-
-        topBar = {
-
-            Crossfade(
-                targetState = state.isSearching,
-                label = "TopBar"
-            ) { searching ->
-
-                if (searching) {
-
-                    SearchTopBar(
-
-                        query = state.searchText,
-
-                        onQueryChange = viewModel::onSearchTextChange,
-
-                        onCloseClick = viewModel::onSearchClose
-
-                    )
-
-                } else {
-
-                    HomeTopBar(
-
-                        isSelectionMode = state.isSelectionMode,
-
-                        selectedCount = state.selectedNotes.size,
-
-                        allSelected =
-
-                            state.notes.isNotEmpty() &&
-                                    state.selectedNotes.size == state.notes.size,
-
-                        onBackClick = {
-
-                            viewModel.clearSelection()
-
-                        },
-
-                        onSearchClick = {
-
-                            if (!state.isSelectionMode) {
-
-                                viewModel.onSearchClick()
-
-                            }
-
-                        },
-
-                        onSettingsClick = {
-
-                            // TODO
-
-                        },
-
-                        onDeleteClick = {
-
-                            viewModel.showDeleteDialog()
-
-                        },
-
-                        onSelectAllClick = {
-
-                            viewModel.toggleSelectAll()
-
-                        }
-
-                    )
-
-                }
-
-            }
-
-        },
-
-        floatingActionButton = {
-
-            AnimatedVisibility(
-
-                visible = !listState.isScrollInProgress,
-
-                enter = fadeIn() + slideInVertically(),
-
-                exit = fadeOut() + slideOutVertically()
-
-            ) {
-
-                FloatingActionButton(
-
-                    onClick = onAddClick
-
-                ) {
-
-                    Icon(
-
-                        imageVector = Icons.Default.Add,
-
-                        contentDescription = "Add Note"
-
-                    )
-
-                }
-
-            }
-
-        }
-
-    )
-    { padding ->
-
-        if (state.notes.isEmpty()) {
-
-            EmptyHome(
-
-                modifier = Modifier.padding(padding)
-
-            )
-
-        } else {
-
-            NotesList(
-
-                state = state,
-
-                padding = padding,
-
-                listState = listState,
-
-                onNoteClick = { noteId ->
-
-                    if (state.isSelectionMode) {
-
-                        viewModel.onSelectionClick(noteId)
-
-                    } else {
-
-                        onNoteClick(noteId)
-
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            HomeDrawer(
+                isHomeSelected = true,
+                isTrashSelected = false,
+
+                onHomeClick = {
+                    scope.launch {
+                        drawerState.close()
                     }
-
                 },
 
-                onNoteLongClick = { noteId ->
-
-                    viewModel.onNoteLongClick(noteId)
-
+                onTrashClick = {
+                    scope.launch {
+                        drawerState.close()
+                    }
+                    onTrashClick()
                 },
 
-                onSelectionClick = { noteId ->
-
-                    viewModel.onSelectionClick(noteId)
-
+                onAboutClick = {
+                    scope.launch {
+                        drawerState.close()
+                    }
+                    onAboutClick()
                 }
-
             )
-
         }
-
+    ) {
+        Scaffold(
+            snackbarHost = {
+                SnackbarHost(
+                    hostState = snackbarHostState
+                )
+            },
+            topBar = {
+                Crossfade(
+                    targetState = state.isSearching,
+                    label = "TopBar"
+                ) { searching ->
+                    if (searching) {
+                        SearchTopBar(
+                            query = state.searchText,
+                            onQueryChange = viewModel::onSearchTextChange,
+                            onCloseClick = viewModel::onSearchClose
+                        )
+                    } else {
+                        HomeTopBar(
+                            isSelectionMode = state.isSelectionMode,
+                            selectedCount = state.selectedNotes.size,
+                            allSelected =
+                                state.notes.isNotEmpty() &&
+                                        state.selectedNotes.size == state.notes.size,
+                            onBackClick = {
+                                viewModel.clearSelection()
+                            },
+                            onMenuClick = {
+                                scope.launch {
+                                    drawerState.open()
+                                }
+                            },
+                            onSearchClick = {
+                                if (!state.isSelectionMode) {
+                                    viewModel.onSearchClick()
+                                }
+                            },
+                            onSettingsClick = {
+                                onSettingsClick()
+                            },
+                            onDeleteClick = {
+                                viewModel.showDeleteDialog()
+                            },
+                            onSelectAllClick = {
+                                viewModel.toggleSelectAll()
+                            }
+                        )
+                    }
+                }
+            },
+            floatingActionButton = {
+                AnimatedVisibility(
+                    visible = !listState.isScrollInProgress,
+                    enter = fadeIn() + slideInVertically(),
+                    exit = fadeOut() + slideOutVertically()
+                ) {
+                    FloatingActionButton(
+                        onClick = onAddClick
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add Note"
+                        )
+                    }
+                }
+            }
+        ) { padding ->
+            if (state.notes.isEmpty()) {
+                EmptyHome(
+                    modifier = Modifier.padding(padding)
+                )
+            } else {
+                NotesList(
+                    state = state,
+                    padding = padding,
+                    listState = listState,
+                    onNoteClick = { noteId ->
+                        if (state.isSelectionMode) {
+                            viewModel.onSelectionClick(noteId)
+                        } else {
+                            onNoteClick(noteId)
+                        }
+                    },
+                    onNoteLongClick = { noteId ->
+                        viewModel.onNoteLongClick(noteId)
+                    },
+                    onSelectionClick = { noteId ->
+                        viewModel.onSelectionClick(noteId)
+                    },
+                    onSwipeDelete = { noteId ->
+                        viewModel.moveSingleNoteToTrash(noteId)
+                    }
+                )
+            }
+        }
+        DeleteNotesDialog(
+            visible = state.showDeleteDialog,
+            selectedCount = state.selectedNotes.size,
+            onDismiss = {
+                viewModel.hideDeleteDialog()
+            },
+            onConfirm = {
+                viewModel.deleteSelectedNotes()
+            }
+        )
     }
-
-    DeleteNotesDialog(
-
-        visible = state.showDeleteDialog,
-
-        selectedCount = state.selectedNotes.size,
-
-        onDismiss = {
-
-            viewModel.hideDeleteDialog()
-
-        },
-
-        onConfirm = {
-
-            viewModel.deleteSelectedNotes()
-
-        }
-
-    )
-
 }

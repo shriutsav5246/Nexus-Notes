@@ -1,5 +1,10 @@
 package com.utsav.nexusnotes.presentation.home
 
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.filled.Check
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.utsav.nexusnotes.domain.model.Note
@@ -228,6 +233,10 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
 
             notesToDelete.forEach { note ->
+                android.util.Log.d(
+                    "DELETE_TEST",
+                    "Deleting note = ${note.id}"
+                )
 
                 noteUseCases.deleteNote(note.id)
 
@@ -249,6 +258,29 @@ class HomeViewModel @Inject constructor(
             _events.send(
                     HomeScreenEvent.ShowUndoSnackbar
             )
+        }
+
+    }
+
+    fun moveSingleNoteToTrash(noteId: Long) {
+
+        val note = allNotes.firstOrNull {
+
+            it.id == noteId
+
+        } ?: return
+
+        recentlyDeletedNotes = listOf(note)
+
+        viewModelScope.launch {
+
+            noteUseCases.deleteNote(note.id)
+            _events.send(
+
+                HomeScreenEvent.ShowUndoSnackbar
+
+            )
+
         }
 
     }
