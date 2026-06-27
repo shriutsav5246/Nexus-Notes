@@ -18,6 +18,8 @@ data class NoteUseCases(
 
     val permanentDelete: PermanentDeleteUseCase,
 
+    val permanentlyDeleteAll: PermanentlyDeleteAllUseCase,
+
     val saveNote: SaveNoteUseCase
 
 )

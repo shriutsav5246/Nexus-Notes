@@ -63,4 +63,7 @@ class NoteRepositoryImpl @Inject constructor(
         noteDao.getDeletedNotes().map { notes ->
             notes.map { it.toDomain() }
         }
+    override suspend fun permanentlyDeleteAll() {
+        noteDao.permanentlyDeleteAll()
+    }
 }

@@ -27,4 +27,6 @@ interface NoteRepository {
 
     fun getDeletedNotes(): Flow<List<Note>>
 
+    suspend fun permanentlyDeleteAll()
+
 }

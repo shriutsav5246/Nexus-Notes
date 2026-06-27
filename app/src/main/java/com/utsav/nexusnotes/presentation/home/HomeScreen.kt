@@ -35,6 +35,7 @@ import com.utsav.nexusnotes.presentation.home.components.HomeDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
+import androidx.compose.material3.SnackbarDuration
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -58,7 +59,8 @@ fun HomeScreen(
                 HomeScreenEvent.ShowUndoSnackbar -> {
                     val result = snackbarHostState.showSnackbar(
                         message = "Notes moved to Trash",
-                        actionLabel = "UNDO"
+                        actionLabel = "UNDO",
+                        duration = SnackbarDuration.Long
                     )
                     if (result == SnackbarResult.ActionPerformed) {
                         viewModel.undoDelete()
@@ -192,9 +194,6 @@ fun HomeScreen(
                     onSelectionClick = { noteId ->
                         viewModel.onSelectionClick(noteId)
                     },
-                    onSwipeDelete = { noteId ->
-                        viewModel.moveSingleNoteToTrash(noteId)
-                    }
                 )
             }
         }

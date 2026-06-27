@@ -14,6 +14,8 @@ data class TrashUiState(
 
     val isSelectionMode: Boolean = false,
 
-    val selectedNotes: Set<Long> = emptySet()
+    val selectedNotes: Set<Long> = emptySet(),
+
+    val showDeleteAllDialog: Boolean = false
 
 )

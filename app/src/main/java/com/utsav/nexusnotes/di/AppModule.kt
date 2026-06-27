@@ -22,6 +22,7 @@ import javax.inject.Singleton
 import com.utsav.nexusnotes.domain.usecase.note.GetTrashNotesUseCase
 import com.utsav.nexusnotes.domain.usecase.note.RestoreNoteUseCase
 import com.utsav.nexusnotes.domain.usecase.note.PermanentDeleteUseCase
+import com.utsav.nexusnotes.domain.usecase.note.PermanentlyDeleteAllUseCase
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -68,6 +69,7 @@ object AppModule {
             deleteNote = DeleteNoteUseCase(repository),
             restoreNote = RestoreNoteUseCase(repository),
             permanentDelete = PermanentDeleteUseCase(repository),
+            permanentlyDeleteAll = PermanentlyDeleteAllUseCase(repository),
             saveNote = SaveNoteUseCase(repository)
         )
     }

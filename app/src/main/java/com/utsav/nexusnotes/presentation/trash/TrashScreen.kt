@@ -13,6 +13,7 @@ import com.utsav.nexusnotes.presentation.trash.components.EmptyTrash
 import com.utsav.nexusnotes.presentation.trash.components.TrashList
 import com.utsav.nexusnotes.presentation.trash.components.TrashTopBar
 import com.utsav.nexusnotes.presentation.trash.components.RestoreNoteDialog
+import com.utsav.nexusnotes.presentation.trash.components.DeleteAllTrashDialog
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrashScreen(
@@ -37,63 +38,49 @@ fun TrashScreen(
                 },
                 onDeleteClick = {
                     viewModel.permanentlyDeleteSelectedNotes()
+                },
+                onDeleteAllClick = {
+                    viewModel.showDeleteAllDialog()
                 }
             )
         }
     ) { padding ->
         if (state.notes.isEmpty()) {
-
             EmptyTrash()
-
         } else {
-
             TrashList(
-
                 notes = state.notes,
-
                 padding = padding,
-
                 selectedNotes = state.selectedNotes,
-
                 isSelectionMode = state.isSelectionMode,
-
                 onNoteClick = { noteId ->
-
                     viewModel.showRestoreDialog(noteId)
-
                 },
-
                 onNoteLongClick = { noteId ->
-
                     viewModel.onNoteLongClick(noteId)
-
                 },
-
                 onSelectionClick = { noteId ->
-
                     viewModel.onSelectionClick(noteId)
-
                 }
-
             )
-
         }
     }
     RestoreNoteDialog(
-
         visible = state.showRestoreDialog,
-
         onDismiss = {
-
             viewModel.hideRestoreDialog()
-
         },
-
         onConfirm = {
-
             viewModel.restoreSelectedNote()
-
         }
-
+    )
+    DeleteAllTrashDialog(
+        visible = state.showDeleteAllDialog,
+        onDismiss = {
+            viewModel.hideDeleteAllDialog()
+        },
+        onConfirm = {
+            viewModel.permanentlyDeleteAllNotes()
+        }
     )
 }

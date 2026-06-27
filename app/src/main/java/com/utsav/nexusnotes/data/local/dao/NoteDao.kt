@@ -56,5 +56,10 @@ interface NoteDao {
     WHERE id = :noteId
 """)
     suspend fun permanentlyDelete(noteId: Long)
+    @Query("""
+    DELETE FROM notes
+    WHERE isDeleted = 1
+""")
+    suspend fun permanentlyDeleteAll()
 
 }

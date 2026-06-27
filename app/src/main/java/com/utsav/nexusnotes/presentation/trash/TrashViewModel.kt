@@ -137,4 +137,37 @@ class TrashViewModel @Inject constructor(
             clearSelection()
         }
     }
+    fun showDeleteAllDialog() {
+
+        _state.update {
+            it.copy(
+                showDeleteAllDialog = true
+            )
+        }
+
+    }
+    fun hideDeleteAllDialog() {
+
+        _state.update {
+            it.copy(
+                showDeleteAllDialog = false
+            )
+        }
+
+    }
+    fun permanentlyDeleteAllNotes() {
+
+        viewModelScope.launch {
+
+            noteUseCases.permanentlyDeleteAll()
+
+            _state.update {
+                it.copy(
+                    showDeleteAllDialog = false
+                )
+            }
+
+        }
+
+    }
 }
