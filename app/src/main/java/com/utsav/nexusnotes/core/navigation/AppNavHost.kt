@@ -9,6 +9,10 @@ import androidx.navigation.navArgument
 import com.utsav.nexusnotes.presentation.editor.EditorScreen
 import com.utsav.nexusnotes.presentation.home.HomeScreen
 import com.utsav.nexusnotes.presentation.trash.TrashScreen
+import com.utsav.nexusnotes.presentation.settings.security.SecurityScreen
+import com.utsav.nexusnotes.presentation.settings.security.SetPinScreen
+import com.utsav.nexusnotes.presentation.settings.security.ChangePinScreen
+import com.utsav.nexusnotes.presentation.settings.security.VerifyPinScreen
 @Composable
 fun AppNavHost() {
     val navController = rememberNavController()
@@ -81,10 +85,98 @@ fun AppNavHost() {
             SettingsScreen(
                 onBack = {
                     navController.goBack()
+                },
+                onSecurityClick = {
+                    navController.navigate(
+                        Routes.SECURITY
+                    )
                 }
+            )
+        }
+        composable(
+            route = Routes.SECURITY
+        ) {
+            SecurityScreen(
+                onBack = {
+                    navController.goBack()
+                },
+
+                onSetPinClick = {
+                    navController.navigate(
+                        Routes.SET_PIN
+                    )
+                },
+
+                onChangePinClick = {
+                    navController.navigate(
+                        Routes.CHANGE_PIN
+                    )
+                },
+
+                onDisablePinClick = {
+                    navController.navigate(
+                        Routes.VERIFY_PIN
+                    )
+                }
+            )
+        }
+        composable(
+            route = Routes.SET_PIN
+        ) {
+            SetPinScreen(
+                onBack = {
+                    navController.goBack()
+                },
+                onPinSaved = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(
+            route = Routes.CHANGE_PIN
+        ) {
+
+            ChangePinScreen(
+
+                onBack = {
+
+                    navController.goBack()
+
+                },
+
+                onPinChanged = {
+
+                    navController.popBackStack()
+
+                }
+
+            )
+
+        }
+        composable(
+            route = Routes.VERIFY_PIN
+        ) {
+
+            VerifyPinScreen(
+
+                title = "Disable PIN",
+
+                showDisableDialog = true,
+
+                onBack = {
+
+                    navController.goBack()
+
+                },
+
+                onSuccess = {
+
+                    navController.goBack()
+
+                }
+
             )
 
         }
     }
-
 }

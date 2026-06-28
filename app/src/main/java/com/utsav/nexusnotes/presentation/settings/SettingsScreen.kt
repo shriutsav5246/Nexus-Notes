@@ -30,6 +30,7 @@ import com.utsav.nexusnotes.presentation.settings.theme.ThemeViewModel
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
+    onSecurityClick: () -> Unit,
     viewModel: ThemeViewModel = hiltViewModel()
 ) {
     val selectedTheme by viewModel
@@ -78,7 +79,7 @@ fun SettingsScreen(
                 SettingsItem(
                     title = "PIN & Biometrics",
                     subtitle = "Manage note protection",
-                    onClick = { }
+                    onClick = onSecurityClick
                 )
             }
             SettingsSection(

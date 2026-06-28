@@ -8,9 +8,15 @@ object Routes {
 
     const val EDITOR_ROUTE =
         "editor/{noteId}"
-
     const val TRASH = "trash"
 
     const val SETTINGS = "settings"
+
+    const val SECURITY = "security"
+
+    const val SET_PIN = "set_pin"
+    const val CHANGE_PIN = "change_pin"
+
+    const val VERIFY_PIN = "verify_pin"
 
 }

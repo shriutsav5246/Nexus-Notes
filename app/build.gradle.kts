@@ -119,6 +119,9 @@ dependencies {
 
     implementation(libs.coil.compose)
 
+    //Lock
+    implementation(libs.androidx.biometric)
+
     implementation(libs.androidx.lifecycle.runtime.compose)
 
     // -------------------------
