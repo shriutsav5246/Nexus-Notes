@@ -14,6 +14,8 @@ data class Note(
 
     val updatedAt: Long,
 
-    val isDeleted: Boolean = false
+    val isDeleted: Boolean = false,
+
+    val isLocked: Boolean = false
 
 )

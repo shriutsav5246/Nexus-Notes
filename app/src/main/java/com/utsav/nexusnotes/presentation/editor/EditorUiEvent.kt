@@ -10,6 +10,12 @@ sealed interface EditorUiEvent {
         val value: String
     ) : EditorUiEvent
 
+    data object ToggleLock : EditorUiEvent
+
+    data object ConfirmLock : EditorUiEvent
+
+    data object DismissLockDialog : EditorUiEvent
+
     data object BackPressed : EditorUiEvent
 
 }

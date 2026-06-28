@@ -15,6 +15,9 @@ data class NoteUseCases(
     val deleteNote: DeleteNoteUseCase,
 
     val restoreNote: RestoreNoteUseCase,
+    val lockNote: LockNoteUseCase,
+
+    val unlockNote: UnlockNoteUseCase,
 
     val permanentDelete: PermanentDeleteUseCase,
 

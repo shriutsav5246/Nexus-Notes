@@ -15,7 +15,8 @@ fun NoteEntity.toDomain(): Note {
         } ?: NoteColor.DEFAULT,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        isDeleted = isDeleted
+        isDeleted = isDeleted,
+        isLocked = isLocked
     )
 
 }
@@ -29,7 +30,8 @@ fun Note.toEntity(): NoteEntity {
         color = color.value,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        isDeleted = isDeleted
+        isDeleted = isDeleted,
+        isLocked = isLocked
     )
 
 }

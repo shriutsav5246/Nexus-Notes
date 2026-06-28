@@ -13,6 +13,10 @@ import com.utsav.nexusnotes.presentation.settings.security.SecurityScreen
 import com.utsav.nexusnotes.presentation.settings.security.SetPinScreen
 import com.utsav.nexusnotes.presentation.settings.security.ChangePinScreen
 import com.utsav.nexusnotes.presentation.settings.security.VerifyPinScreen
+import com.utsav.nexusnotes.presentation.settings.about.AboutScreen
+import com.utsav.nexusnotes.presentation.settings.privacy.PrivacyPolicyScreen
+//import com.utsav.nexusnotes.presentation.auth.UnlockNoteScreen
+import com.utsav.nexusnotes.presentation.about.AboutAppScreen
 @Composable
 fun AppNavHost() {
     val navController = rememberNavController()
@@ -38,7 +42,9 @@ fun AppNavHost() {
                     navController.navigate(Routes.SETTINGS)
                 },
                 onAboutClick = {
-                    // TODO
+                    navController.navigate(
+                        Routes.ABOUT_APP
+                    )
                 }
             )
         }
@@ -63,6 +69,7 @@ fun AppNavHost() {
                 }
             )
         }
+
         composable(
             route = Routes.TRASH
         ) {
@@ -89,6 +96,16 @@ fun AppNavHost() {
                 onSecurityClick = {
                     navController.navigate(
                         Routes.SECURITY
+                    )
+                },
+                onPrivacyClick = {
+                    navController.navigate(
+                        Routes.PRIVACY
+                    )
+                },
+                onAboutClick = {
+                    navController.navigate(
+                        Routes.ABOUT
                     )
                 }
             )
@@ -178,5 +195,77 @@ fun AppNavHost() {
             )
 
         }
+        composable(
+            route = Routes.PRIVACY
+        ) {
+
+            PrivacyPolicyScreen(
+
+                onBack = {
+
+                    navController.goBack()
+
+                }
+
+            )
+
+        }
+        composable(
+            route = Routes.ABOUT
+        ) {
+
+            AboutScreen(
+
+                onBack = {
+
+                    navController.goBack()
+
+                }
+
+            )
+
+        }
+        composable(
+            route = Routes.ABOUT_APP
+        ) {
+            AboutAppScreen(
+                onBack = {
+                    navController.goBack()
+                }
+            )
+        }
+//        composable(
+//            route = Routes.UNLOCK_NOTE,
+//            arguments = listOf(
+//                navArgument(NavArguments.NOTE_ID) {
+//                    type = NavType.LongType
+//                }
+//            )
+//        ) {
+//
+//            val noteId =
+//                it.arguments?.getLong(
+//                    NavArguments.NOTE_ID
+//                ) ?: 0L
+//
+//            VerifyPinScreen(
+//
+//                title = "Unlock Note",
+//
+//                onBack = {
+//                    navController.goBack()
+//                },
+//
+//                onSuccess = {
+//
+//                    navController.popBackStack()
+//
+//                    navController.openEditor(noteId)
+//
+//                }
+//
+//            )
+//
+//        }
     }
 }

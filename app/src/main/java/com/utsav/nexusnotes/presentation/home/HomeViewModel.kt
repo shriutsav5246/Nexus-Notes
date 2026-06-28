@@ -315,6 +315,26 @@ class HomeViewModel @Inject constructor(
 
     }
 
+    fun lockNote(noteId: Long) {
+
+        viewModelScope.launch {
+
+            noteUseCases.lockNote(noteId)
+
+        }
+
+    }
+
+    fun unlockNote(noteId: Long) {
+
+        viewModelScope.launch {
+
+            noteUseCases.unlockNote(noteId)
+
+        }
+
+    }
+
     fun toggleSelectAll() {
 
         val allSelected =

@@ -31,6 +31,8 @@ import com.utsav.nexusnotes.presentation.settings.theme.ThemeViewModel
 fun SettingsScreen(
     onBack: () -> Unit,
     onSecurityClick: () -> Unit,
+    onPrivacyClick: () -> Unit,
+    onAboutClick: () -> Unit,
     viewModel: ThemeViewModel = hiltViewModel()
 ) {
     val selectedTheme by viewModel
@@ -88,7 +90,7 @@ fun SettingsScreen(
                 SettingsItem(
                     title = "Privacy Policy",
                     subtitle = "View privacy information",
-                    onClick = { }
+                    onClick = onPrivacyClick
                 )
             }
             SettingsSection(
@@ -97,7 +99,7 @@ fun SettingsScreen(
                 SettingsItem(
                     title = "About Nexus Notes",
                     subtitle = "Version 1.0.0",
-                    onClick = { }
+                    onClick = onAboutClick
                 )
             }
         }

@@ -36,6 +36,8 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
 import androidx.compose.material3.SnackbarDuration
+import androidx.compose.ui.platform.LocalContext
+import com.utsav.nexusnotes.core.utils.AppShare
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -53,6 +55,7 @@ fun HomeScreen(
         initialValue = DrawerValue.Closed
     )
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
@@ -88,19 +91,29 @@ fun HomeScreen(
                         drawerState.close()
                     }
                 },
-
                 onTrashClick = {
                     scope.launch {
                         drawerState.close()
                     }
                     onTrashClick()
                 },
-
                 onAboutClick = {
+
                     scope.launch {
                         drawerState.close()
                     }
+
                     onAboutClick()
+
+                },
+                onShareClick = {
+
+                    scope.launch {
+                        drawerState.close()
+                    }
+
+                    AppShare.shareApp(context)
+
                 }
             )
         }

@@ -1,5 +1,6 @@
 package com.utsav.nexusnotes.di
-
+import com.utsav.nexusnotes.domain.usecase.note.LockNoteUseCase
+import com.utsav.nexusnotes.domain.usecase.note.UnlockNoteUseCase
 import android.content.Context
 import androidx.room.Room
 import com.utsav.nexusnotes.data.local.dao.NoteDao
@@ -23,9 +24,27 @@ import com.utsav.nexusnotes.domain.usecase.note.GetTrashNotesUseCase
 import com.utsav.nexusnotes.domain.usecase.note.RestoreNoteUseCase
 import com.utsav.nexusnotes.domain.usecase.note.PermanentDeleteUseCase
 import com.utsav.nexusnotes.domain.usecase.note.PermanentlyDeleteAllUseCase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    private val MIGRATION_1_2 = object : Migration(1, 2) {
+
+        override fun migrate(
+            database: SupportSQLiteDatabase
+        ) {
+
+            database.execSQL(
+                """
+            ALTER TABLE notes
+            ADD COLUMN isLocked INTEGER NOT NULL DEFAULT 0
+            """.trimIndent()
+            )
+
+        }
+
+    }
     @Provides
     @Singleton
     fun provideDatabase(
@@ -36,7 +55,9 @@ object AppModule {
             context,
             NexusDatabase::class.java,
             "nexus_notes_database"
-        ).build()
+        )
+            .addMigrations(MIGRATION_1_2)
+            .build()
 
     }
     @Provides
@@ -68,6 +89,8 @@ object AppModule {
             updateNote = UpdateNoteUseCase(repository),
             deleteNote = DeleteNoteUseCase(repository),
             restoreNote = RestoreNoteUseCase(repository),
+            lockNote = LockNoteUseCase(repository),
+            unlockNote = UnlockNoteUseCase(repository),
             permanentDelete = PermanentDeleteUseCase(repository),
             permanentlyDeleteAll = PermanentlyDeleteAllUseCase(repository),
             saveNote = SaveNoteUseCase(repository)

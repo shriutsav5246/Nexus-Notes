@@ -7,14 +7,14 @@ import com.utsav.nexusnotes.domain.usecase.note.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 
 @HiltViewModel
 class EditorViewModel @Inject constructor(
@@ -56,7 +56,8 @@ class EditorViewModel @Inject constructor(
                         title = it.title,
                         content = it.content,
                         isNewNote = false,
-                        hasChanges = false
+                        hasChanges = false,
+                        isLocked = it.isLocked
                     )
 
                 }
@@ -74,10 +75,12 @@ class EditorViewModel @Inject constructor(
             is EditorUiEvent.TitleChanged -> {
 
                 _state.update {
+
                     it.copy(
                         title = event.value,
                         hasChanges = true
                     )
+
                 }
 
                 scheduleAutoSave()
@@ -87,13 +90,85 @@ class EditorViewModel @Inject constructor(
             is EditorUiEvent.ContentChanged -> {
 
                 _state.update {
+
                     it.copy(
                         content = event.value,
                         hasChanges = true
                     )
+
                 }
 
                 scheduleAutoSave()
+
+            }
+
+            EditorUiEvent.ToggleLock -> {
+
+                _state.update {
+
+                    it.copy(
+                        showLockDialog = true
+                    )
+
+                }
+
+            }
+
+            EditorUiEvent.DismissLockDialog -> {
+
+                _state.update {
+
+                    it.copy(
+                        showLockDialog = false
+                    )
+
+                }
+
+            }
+
+            EditorUiEvent.ConfirmLock -> {
+
+                viewModelScope.launch {
+
+                    val current = state.value
+
+                    if (current.noteId == 0L) {
+
+                        _state.update {
+
+                            it.copy(
+                                showLockDialog = false
+                            )
+
+                        }
+
+                        return@launch
+
+                    }
+
+                    if (current.isLocked) {
+
+                        noteUseCases.unlockNote(current.noteId)
+
+                    } else {
+                        android.util.Log.d(
+                            "LOCK_TEST",
+                            "Lock button pressed for noteId = ${current.noteId}"
+                        )
+                        noteUseCases.lockNote(current.noteId)
+
+                    }
+
+                    _state.update {
+
+                        it.copy(
+                            isLocked = !current.isLocked,
+                            showLockDialog = false
+                        )
+
+                    }
+
+                }
 
             }
 

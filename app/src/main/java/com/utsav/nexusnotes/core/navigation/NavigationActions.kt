@@ -19,3 +19,10 @@ fun NavHostController.openTrash() {
     navigate(Routes.TRASH)
 
 }
+fun NavHostController.openUnlockNote(
+    noteId: Long
+) {
+    navigate(
+        "${Routes.UNLOCK_NOTE_BASE}/$noteId"
+    )
+}

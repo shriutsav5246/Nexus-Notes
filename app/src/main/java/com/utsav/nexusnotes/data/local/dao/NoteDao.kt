@@ -52,6 +52,20 @@ interface NoteDao {
     suspend fun restoreNote(noteId: Long)
 
     @Query("""
+    UPDATE notes
+    SET isLocked = 1
+    WHERE id = :noteId
+""")
+    suspend fun lockNote(noteId: Long)
+
+    @Query("""
+    UPDATE notes
+    SET isLocked = 0
+    WHERE id = :noteId
+""")
+    suspend fun unlockNote(noteId: Long)
+
+    @Query("""
     DELETE FROM notes
     WHERE id = :noteId
 """)
@@ -60,6 +74,7 @@ interface NoteDao {
     DELETE FROM notes
     WHERE isDeleted = 1
 """)
+
     suspend fun permanentlyDeleteAll()
 
 }

@@ -12,6 +12,9 @@ data class EditorUiState(
 
     val isNewNote: Boolean = true,
 
-    val hasChanges: Boolean = false
+    val hasChanges: Boolean = false,
+
+    val isLocked: Boolean = false,
+    val showLockDialog: Boolean = false
 
 )

@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.filled.Share
 import com.utsav.nexusnotes.R
 @Composable
 fun HomeDrawer(
@@ -27,7 +28,8 @@ fun HomeDrawer(
     isTrashSelected: Boolean,
     onHomeClick: () -> Unit,
     onTrashClick: () -> Unit,
-    onAboutClick: () -> Unit
+    onAboutClick: () -> Unit,
+    onShareClick: () -> Unit
 ) {
     ModalDrawerSheet(
         drawerContainerColor = DrawerDefaults.containerColor
@@ -75,7 +77,7 @@ fun HomeDrawer(
         )
         NavigationDrawerItem(
             label = {
-                Text("About")
+                Text("About This App")
             },
             selected = false,
             onClick = onAboutClick,
@@ -89,8 +91,25 @@ fun HomeDrawer(
                 NavigationDrawerItemDefaults.ItemPadding
             )
         )
-//        Spacer(modifier = Modifier.weight(1f, fill = true))
-        Spacer(modifier = Modifier.height(24.dp))
+        NavigationDrawerItem(
+            label = {
+                Text("Share This App")
+            },
+            selected = false,
+            onClick = onShareClick,
+            icon = {
+                androidx.compose.material3.Icon(
+                    Icons.Default.Share,
+                    null
+                )
+            },
+            modifier = Modifier.padding(
+                NavigationDrawerItemDefaults.ItemPadding
+            )
+        )
+        Spacer(
+            modifier = Modifier.weight(1f)
+        )
         Divider()
         Text(
             text = "Version 1.0.0",

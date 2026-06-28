@@ -25,7 +25,8 @@ class SaveNoteUseCase @Inject constructor(
                 color = NoteColor.DEFAULT,
                 createdAt = now,
                 updatedAt = now,
-                isDeleted = false
+                isDeleted = false,
+                isLocked = false
             )
 
             return repository.insertNote(note)
@@ -48,7 +49,8 @@ class SaveNoteUseCase @Inject constructor(
 
             updatedAt = now,
 
-            isDeleted = oldNote?.isDeleted ?: false
+            isDeleted = oldNote?.isDeleted ?: false,
+            isLocked = oldNote?.isLocked ?: false
 
         )
 

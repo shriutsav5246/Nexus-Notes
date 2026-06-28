@@ -19,6 +19,8 @@ data class NoteEntity(
 
     val updatedAt: Long,
 
-    val isDeleted: Boolean = false
+    val isDeleted: Boolean = false,
+
+    val isLocked: Boolean = false
 
 )

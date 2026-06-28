@@ -55,6 +55,18 @@ class NoteRepositoryImpl @Inject constructor(
         noteDao.restoreNote(noteId)
     }
 
+    override suspend fun lockNote(noteId: Long) {
+        android.util.Log.d(
+            "LOCK_TEST",
+            "Repository lockNote($noteId)"
+        )
+        noteDao.lockNote(noteId)
+    }
+
+    override suspend fun unlockNote(noteId: Long) {
+        noteDao.unlockNote(noteId)
+    }
+
     override suspend fun permanentlyDelete(noteId: Long) {
         noteDao.permanentlyDelete(noteId)
     }
@@ -66,4 +78,5 @@ class NoteRepositoryImpl @Inject constructor(
     override suspend fun permanentlyDeleteAll() {
         noteDao.permanentlyDeleteAll()
     }
+
 }

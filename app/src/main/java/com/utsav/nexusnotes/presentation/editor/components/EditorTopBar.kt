@@ -9,14 +9,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.LockOpen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditorTopBar(
-
     onBackClick: () -> Unit,
-
-    onMoreClick: () -> Unit = {}
+    onMoreClick: () -> Unit = {},
+    isLocked: Boolean = false,
+    onLockClick: () -> Unit = {}
 
 ) {
 
@@ -45,6 +47,28 @@ fun EditorTopBar(
         },
 
         actions = {
+
+            IconButton(
+                onClick = onLockClick
+            ) {
+
+                Icon(
+
+                    imageVector =
+                        if (isLocked)
+                            Icons.Default.LockOpen
+                        else
+                            Icons.Default.Lock,
+
+                    contentDescription =
+                        if (isLocked)
+                            "Unlock Note"
+                        else
+                            "Lock Note"
+
+                )
+
+            }
 
             IconButton(
 

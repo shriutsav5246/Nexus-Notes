@@ -23,6 +23,10 @@ interface NoteRepository {
 
     suspend fun restoreNote(noteId: Long)
 
+    suspend fun lockNote(noteId: Long)
+
+    suspend fun unlockNote(noteId: Long)
+
     suspend fun permanentlyDelete(noteId: Long)
 
     fun getDeletedNotes(): Flow<List<Note>>

@@ -64,9 +64,17 @@ fun EditorScreen(
             EditorTopBar(
 
                 onBackClick = {
-
                     viewModel.onEvent(
                         EditorUiEvent.BackPressed
+                    )
+                },
+
+                isLocked = state.isLocked,
+
+                onLockClick = {
+
+                    viewModel.onEvent(
+                        EditorUiEvent.ToggleLock
                     )
 
                 }
@@ -75,7 +83,8 @@ fun EditorScreen(
 
         }
 
-    ) { padding ->
+    )
+    { padding ->
 
         NoteEditor(
 
@@ -98,6 +107,83 @@ fun EditorScreen(
                 viewModel.onEvent(
                     EditorUiEvent.ContentChanged(it)
                 )
+
+            }
+
+        )
+
+    }
+    if (state.showLockDialog) {
+
+        androidx.compose.material3.AlertDialog(
+
+            onDismissRequest = {
+
+                viewModel.onEvent(
+                    EditorUiEvent.DismissLockDialog
+                )
+
+            },
+
+            title = {
+
+                androidx.compose.material3.Text(
+                    if (state.isLocked)
+                        "Unlock Note"
+                    else
+                        "Lock Note"
+                )
+
+            },
+
+            text = {
+
+                androidx.compose.material3.Text(
+                    if (state.isLocked)
+                        "Unlocking is not implemented yet."
+                    else
+                        "Locking is not implemented yet."
+                )
+
+            },
+
+            confirmButton = {
+
+                androidx.compose.material3.Button(
+
+                    onClick = {
+
+                        viewModel.onEvent(
+                            EditorUiEvent.ConfirmLock
+                        )
+
+                    }
+
+                ) {
+
+                    androidx.compose.material3.Text("OK")
+
+                }
+
+            },
+
+            dismissButton = {
+
+                androidx.compose.material3.Button(
+
+                    onClick = {
+
+                        viewModel.onEvent(
+                            EditorUiEvent.DismissLockDialog
+                        )
+
+                    }
+
+                ) {
+
+                    androidx.compose.material3.Text("Cancel")
+
+                }
 
             }
 

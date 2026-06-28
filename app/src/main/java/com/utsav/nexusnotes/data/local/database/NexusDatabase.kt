@@ -7,7 +7,7 @@ import com.utsav.nexusnotes.data.local.entity.NoteEntity
 
 @Database(
     entities = [NoteEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class NexusDatabase : RoomDatabase() {

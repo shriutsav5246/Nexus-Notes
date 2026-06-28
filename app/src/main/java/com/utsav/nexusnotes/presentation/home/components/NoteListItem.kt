@@ -25,6 +25,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.utsav.nexusnotes.core.utils.toRelativeTime
 import com.utsav.nexusnotes.domain.model.Note
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
 
 @Composable
 fun NoteListItem(
@@ -73,13 +76,33 @@ fun NoteListItem(
                     .padding(20.dp)
             ) {
 
-                Text(
-                    text = note.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Text(
+                        text = note.title,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    if (note.isLocked) {
+
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "Locked",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+
+                    }
+
+                }
 
                 Spacer(
                     modifier = Modifier.height(14.dp)
