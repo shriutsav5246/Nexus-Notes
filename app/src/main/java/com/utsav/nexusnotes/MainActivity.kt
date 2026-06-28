@@ -16,9 +16,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            NexusNotesTheme {
-                NexusNotesApp()
-            }
+            NexusNotesApp()
         }
     }
 }
