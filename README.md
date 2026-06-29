@@ -143,7 +143,7 @@ Upcoming Improvements
 
 ---
 
-## 📖 About
+## About
 
 Inside the application users can view
 
@@ -154,7 +154,7 @@ Inside the application users can view
 
 ---
 
-# 🚀 Tech Stack
+# Tech Stack
 
 | Technology | Usage |
 |------------|-------|
