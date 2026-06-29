@@ -38,6 +38,8 @@ import kotlinx.coroutines.launch
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.ui.platform.LocalContext
 import com.utsav.nexusnotes.core.utils.AppShare
+import com.utsav.nexusnotes.presentation.home.components.ShareNotesBottomSheet
+import com.utsav.nexusnotes.core.share.ShareCoordinator
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -56,6 +58,9 @@ fun HomeScreen(
     )
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val shareCoordinator = remember {
+        ShareCoordinator(context)
+    }
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
@@ -70,6 +75,18 @@ fun HomeScreen(
                     } else {
                         viewModel.clearRecentlyDeleted()
                     }
+                }
+                HomeScreenEvent.ShareTextNotes -> {
+                    shareCoordinator.shareAsText(
+                        viewModel.getSelectedNotes()
+                    )
+                    viewModel.clearSelection()
+                }
+                HomeScreenEvent.SharePdfNotes -> {
+                    shareCoordinator.shareAsPdf(
+                        viewModel.getSelectedNotes()
+                    )
+                    viewModel.clearSelection()
                 }
             }
         }
@@ -161,6 +178,9 @@ fun HomeScreen(
                             onDeleteClick = {
                                 viewModel.showDeleteDialog()
                             },
+                            onShareClick = {
+                                viewModel.showShareBottomSheet()
+                            },
                             onSelectAllClick = {
                                 viewModel.toggleSelectAll()
                             }
@@ -220,5 +240,18 @@ fun HomeScreen(
                 viewModel.deleteSelectedNotes()
             }
         )
+        if (state.showShareBottomSheet) {
+            ShareNotesBottomSheet(
+                onDismiss = {
+                    viewModel.hideShareBottomSheet()
+                },
+                onSharePdf = {
+                    viewModel.shareSelectedNotesAsPdf()
+                },
+                onShareText = {
+                    viewModel.shareSelectedNotesAsText()
+                }
+            )
+        }
     }
 }

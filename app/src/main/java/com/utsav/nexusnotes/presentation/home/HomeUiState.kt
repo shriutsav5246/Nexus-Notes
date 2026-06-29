@@ -16,6 +16,8 @@ data class HomeUiState(
 
     val selectedNotes: Set<Long> = emptySet(),
 
-    val showDeleteDialog: Boolean = false
+    val showDeleteDialog: Boolean = false,
+
+    val showShareBottomSheet: Boolean = false
 
 )

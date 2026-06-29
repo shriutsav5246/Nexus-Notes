@@ -219,7 +219,52 @@ class HomeViewModel @Inject constructor(
         }
 
     }
+    fun showShareBottomSheet() {
 
+        if (_state.value.selectedNotes.isEmpty()) return
+
+        _state.update {
+
+            it.copy(
+                showShareBottomSheet = true
+            )
+
+        }
+
+    }
+
+    fun hideShareBottomSheet() {
+
+        _state.update {
+
+            it.copy(
+                showShareBottomSheet = false
+            )
+
+        }
+
+    }
+    fun shareSelectedNotesAsText() {
+        viewModelScope.launch {
+            hideShareBottomSheet()
+            _events.send(
+                HomeScreenEvent.ShareTextNotes
+            )
+        }
+    }
+    fun shareSelectedNotesAsPdf() {
+
+        viewModelScope.launch {
+
+            hideShareBottomSheet()
+
+            _events.send(
+                HomeScreenEvent.SharePdfNotes
+            )
+
+        }
+
+    }
     fun deleteSelectedNotes() {
 
         val notesToDelete = allNotes.filter {
@@ -367,6 +412,15 @@ class HomeViewModel @Inject constructor(
     fun isSelected(noteId: Long): Boolean {
 
         return noteId in _state.value.selectedNotes
+
+    }
+    fun getSelectedNotes(): List<Note> {
+
+        return allNotes.filter {
+
+            it.id in _state.value.selectedNotes
+
+        }
 
     }
 }
