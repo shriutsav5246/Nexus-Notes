@@ -586,13 +586,3 @@ This project makes use of modern Android development libraries and follows recom
 * Room Database
 * Hilt
 * AndroidX
-
----
-
-<p align="center">
-
-If you found this project useful, consider giving the repository a ⭐.
-
-It helps support the project and encourages future development.
-
-</p>
